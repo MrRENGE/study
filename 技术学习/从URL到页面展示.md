@@ -38,4 +38,13 @@
 
 ##　web Server 执行操作
 
-根据路由执行对应 controller 
+根据路由执行对应 controller ，
+
+## 浏览器展示过程
+
+​	当 http 请求返回数据后，根据 body 进行内容渲染。不管什么服务端状态码，对应的页面都需要解析渲染。
+
+* 解析 HTML 节点成为DOM 树
+* 同时解析 CSS 构建CSSOM (也说CSS 抽象语法树)
+* 结合DOM和CSSOM 生成Render Tree 渲染树
+* 然后根据渲染树计算形成位图，调用操作系统底层实现将位图渲染到展示
