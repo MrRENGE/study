@@ -67,7 +67,6 @@
             if (!(this instanceof LazyLoad)) {
                 return new LazyLoad(el);
             }
-
             this.setting = Object.assign({}, { src: 'data-src', srcset: 'data-srcset', selector: '.lazyload' }, options);
 
             if (typeof el === 'string') {
@@ -118,7 +117,8 @@
                 this.listener = null;
             }
         }
-        document.onscroll = LazyLoad('img',images);
+        // document.onscroll = LazyLoad('img',images).initEvent();
+        
     </script>
     <title>Document</title>
 </head>
@@ -135,5 +135,7 @@
             }
             console.log(content);
         document.getElementsByClassName('box')[0].appendChild(content);
+
+        let lazy = new LazyLoad('img',images);
 </script>
 </html>
