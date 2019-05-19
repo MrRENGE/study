@@ -1,31 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <style>
-        .content{
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        body{
-            height: 222222px;
-            background-color: aqua;
-        }
-    </style>
-    <script>
-        const images = [
-            {src:'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3097709177,1697480191&fm=26&gp=0.jpg'},
-            {src:'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2339608655,685288998&fm=26&gp=0.jpg'},
-            {src:'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3097709177,1697480191&fm=26&gp=0.jpg'},
-            {src:'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3097709177,1697480191&fm=26&gp=0.jpg'},
-            {src:'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1911489778,1016455017&fm=26&gp=0.jpg'},
-            {src:'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3097709177,1697480191&fm=26&gp=0.jpg'},
-            {src:'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3097709177,1697480191&fm=26&gp=0.jpg'},
-            {src:'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3097709177,1697480191&fm=26&gp=0.jpg'},
-        ];       
+    
         // 节流函数
         function throttle (fn, interval = 500) {
             let timer = null
@@ -118,24 +91,3 @@
             }
         }
         // document.onscroll = LazyLoad('img',images).initEvent();
-        
-    </script>
-    <title>Document</title>
-</head>
-<body>
-    <div class="box"></div>
-</body>
-<script>
-     let content  = document.createElement('div');
-            content.className = 'content';
-            for(let i = 0;i<30;i++){
-                let img = document.createElement('img');
-                img.src = '';
-                content.appendChild(img);
-            }
-            console.log(content);
-        document.getElementsByClassName('box')[0].appendChild(content);
-
-        let lazy = new LazyLoad('img',images);
-</script>
-</html>

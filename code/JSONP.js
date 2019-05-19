@@ -1,11 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <script>
         var JSONP = {
                 now: function() {
                     return (new Date()).getTime();
@@ -96,9 +88,3 @@
                     }
             JSONP.getJSON("http://api.qunar.com/cdnWebservices.jcp", data, function(json) {console.log(json)});
             JSONP.getJSON("http://api.qunar.com/cdnWebservices.jcp?from=北京&count=27&output=json&callback=?", null,function(json) {console.log(json)});
-        </script>
-</head>
-<body>
-    
-</body>
-</html>
