@@ -90,7 +90,7 @@ function partision(arr,l,r){
     var item = arr[l];
     while(i<j){
         while(j>l){
-            if(arr[j]>item){
+            if(arr[j]>item && i<j){
                 j--;
             }else{
                 arr[i] = arr[j];
@@ -98,14 +98,14 @@ function partision(arr,l,r){
             }
         }
         while(i<r){
-            if(arr[i]<item){
+            if(arr[i]<item && i<j){
                 i++;
             }else{
                 arr[j] = arr[i];
                 break;
             }
         }
-
     }
-    return i+1;
+    arr[i] = item;
+    return i;
 }
