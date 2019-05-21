@@ -63,6 +63,9 @@ function merge(arr,l,m,r){
             index2++;
         }
     }
+    for(let j=l;j<r;j++){
+        arr[j] = temp[j-l];
+    }
 }
 
 function mergeSort(arr,l,r){
