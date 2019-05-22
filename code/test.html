@@ -95,8 +95,67 @@
             }
             return -1;
         }
-        let arr= [1,2,4,5,5,6,7,8,9];
-        console.log(searchFirstItem(arr,5));
+        // let arr= [1,2,4,5,5,6,7,8,9];
+        // console.log(searchFirstItem(arr,5));
+
+
+
+                // 先序遍历
+        function preorder(tree={}){
+            console.log(tree.data);
+            if(tree.left)preorder(tree.left);
+            if(tree.right)preorder(tree.right);
+            return ;
+            
+        }
+
+        //中序遍历
+        function inorder(tree){
+            if(tree.left)inorder(tree.left);
+            console.log(tree.data);
+            if(tree.right)inorder(tree.right);
+            return ;
+        }
+
+        //后序遍历
+        function postOrder(){
+            
+            if(tree.left)postOrder(tree.left);
+            if(tree.right)postOrder(tree.right);
+            console.log(tree.data);
+            return ;
+        }
+
+        var tree = {
+            data:"A",
+            left:{
+                data:"B",
+                left:{
+                    data:"C",
+                    left:null,
+                    right:null,
+                },
+                right:{
+                    data:"D",
+                    left:null,
+                    right:null,
+                }
+            },
+            right:{
+                data:"E",
+                left:{
+                    data:"F",
+                    left:null,
+                    right:null,
+                },
+                right:{
+                    data:"G",
+                    left:null,
+                    right:null,
+                }
+            }
+        }
+        preorder(tree);
     </script>
 </head>
 <body>
