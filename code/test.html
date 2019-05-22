@@ -126,36 +126,66 @@
             return ;
         }
 
-        var tree = {
-            data:"A",
-            left:{
-                data:"B",
-                left:{
-                    data:"C",
-                    left:null,
-                    right:null,
-                },
-                right:{
-                    data:"D",
-                    left:null,
-                    right:null,
-                }
-            },
-            right:{
-                data:"E",
-                left:{
-                    data:"F",
-                    left:null,
-                    right:null,
-                },
-                right:{
-                    data:"G",
-                    left:null,
-                    right:null,
-                }
+        // var tree = {
+        //     data:"A",
+        //     left:{
+        //         data:"B",
+        //         left:{
+        //             data:"C",
+        //             left:null,
+        //             right:null,
+        //         },
+        //         right:{
+        //             data:"D",
+        //             left:null,
+        //             right:null,
+        //         }
+        //     },
+        //     right:{
+        //         data:"E",
+        //         left:{
+        //             data:"F",
+        //             left:null,
+        //             right:null,
+        //         },
+        //         right:{
+        //             data:"G",
+        //             left:null,
+        //             right:null,
+        //         }
+        //     }
+        // }
+        // preorder(tree);
+
+        function BtreeSearch(tree={},item){
+            let node ;
+            if(!tree){
+                node = createNode(item);
+                return node;
+            } 
+            if(item<tree.data){
+                tree.left = BtreeSearch(tree.left,item);
+            }
+            if(item>tree.data){
+                tree.right = BtreeSearch(tree.right,item);
+            }
+            
+        }
+        function createNode(item){
+            return {
+                data:item,
+                left:null,
+                right:null,
             }
         }
-        preorder(tree);
+
+        var tree = {};
+        for(let i =1;i<10;i++){
+            console.log(BtreeSearch(tree,i));
+        }
+        
+
+        
     </script>
 </head>
 <body>

@@ -24,3 +24,26 @@ function postOrder(){
     console.log(tree.data);
     return ;
 }
+
+
+// 二叉索搜树
+
+function BtreeSearch(tree,item){
+    if(item<tree.data){
+        BtreeSearch(tree.left,item);
+    }
+    if(item>tree.data){
+        BtreeSearch(tree.right,item);
+    }
+    if(tree == null){
+        tree = createNode(item);
+        return ;
+    } 
+}
+function createNode(item){
+    return {
+        data:item,
+        left:null,
+        right:null,
+    }
+}

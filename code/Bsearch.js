@@ -59,3 +59,41 @@ function searchEndItem(arr,item){
     }
     return -1;
 }
+
+
+function BSearchTree(tree,item){
+    if(item>tree.data){
+        BSearchTree(tree.right,item);
+    }else if(item<tree.data){
+        BSearchTree(tree.left,item)
+    }else if(tree.data ===item){
+        return tree.data; //找到
+    }else{
+        return null;
+    }
+}
+
+
+//实现蛇形遍历
+function snack(tree){
+    let left = [];
+    let right =[];
+    left.push(tree.left);
+    left.push(tree.right);
+    while(!(left.length ===0 &&right.length===0)){
+        while(left.length!==0){
+            // 左边压栈的，从右遍历
+            let item = left.pop();
+            console.log(item.data);
+            item.right&& right.push(item.right);
+            item.left&& right.push(item.left);
+        }
+        while(right.length!==0){
+            // 右边压栈的，从左遍历
+            let item = right.pop();
+            console.log(item.data);
+            item.left&& left.push(item.left);
+            item.right&& left.push(item.right);
+        }
+    }
+}
