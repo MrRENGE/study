@@ -291,5 +291,62 @@ class Title extends Component {
   
   ```
 
-  
+* 在优化以下，将 state 和 stateChange 合并到一起
 
+   
+
+  ```javascript
+  // 将state和 stateChange 合并到一起
+  function stateChange(state,action){
+      //state 不存在就去初始化一个state
+      if(!state){
+          state = {
+              title:{
+                  text:"react 小书标题",
+                  color:"green",
+              },
+              content:{
+                  text:"react 小书内容",
+                  color:'red',
+              }
+          }
+      }
+      switch (action.type){
+          case 'UPDATA_TITLE_TEXT':
+              return {
+                  ...state,
+                  title:{
+                      ...state.title,
+                      text:action.text
+                  }
+              }
+          case 'UPDATA_TITLE_COLOR':
+              return {
+                  ...state,
+                  title:{
+                      ...state.title,
+                      color:action.color,
+                  }
+              }
+          default:return state;
+      }
+  }
+  
+  // 因为将state和stateChange 合并到一块了，所以需要变动createStore ，参数变为一个 了
+  
+  function createStore(stateChange){
+      let state = null;
+      const getState = ()=>{return state};
+      const linsners = [];
+      const subscribe = (linsner)=>{linsners.push(linsner)};
+      const dispatch = (action)=>{ 
+          state = stateChange(state,action);
+          linsners.forEach((linsner)=>{linsner()});
+      }
+      state = dispatch({});//初始化state
+      return {getState,subscribe,dispatch};
+  }
+  
+  ```
+
+  到目前，我们封装到一个高可用的 createState 函数。
