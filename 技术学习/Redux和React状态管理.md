@@ -349,4 +349,318 @@ class Title extends Component {
   
   ```
 
-  到目前，我们封装到一个高可用的 createState 函数。
+  到目前，我们封装到一个高可用的 createState 函数。	到这儿，将state和stateChange合并起来，生成一个纯函数 reducer，哈哈！手写 redux 已经完成。
+
+
+###　将 Redux 和 react 结合起来
+
+#### 将store 生成放在context中，具体步骤为。
+
+* 获取context
+* 从context中取出 store
+* 获取store中的state 【使用getState函数】
+* 改变组件自己的状态
+
+ 父组件核心代码：
+
+​	
+
+```javascript
+// 定义一个createStore函数
+function createStore(reducer){
+    let  state = null;
+    const listeners = [];
+    const sbuscribe = (linsener)=>{listeners.push(linsener)};
+    const getState = ()=> state ;
+    const dispatch = (action)=>{
+        state = reducer(state,action);
+        listeners.forEach((listener)=>{listener()});
+    }
+    dispatch({});
+    return {getState,dispatch,sbuscribe};
+}
+
+// 定义一个reducer 函数
+function themReducer(state,action){
+    if(!state){
+        state = {
+            themColor:'red',
+        }
+    }
+    switch(action.type){
+        case 'CHANGE_COLOR':
+            return {
+                ...state,
+                    themColor:action.color
+                }
+            
+        default: return state;
+        }
+}
+// 实例化一个store
+const store = createStore(themReducer);
+
+class Index extends Component{
+    static childContextTypes = {
+        store : PropTypes.object
+    }
+    constructor(props){
+        super(props);
+        this.state = {
+            themColor:'',
+        }
+    }
+    getChildContext(){
+        return {store };
+    }
+    componentDidMount(){
+        this.setState({themColor:'red'})
+    }
+    render(){
+        return (
+            <div>
+                <Header/>
+                <Main/>
+            </div>
+        )
+    }
+}
+
+```
+
+子组件引用：
+
+ 
+
+```javascript
+class Header extends Component{
+    static contextTypes = {
+        store:PropTypes.object,
+    }
+    constructor(props){
+        super(props);
+        this.state={
+            themColor:'',
+        }
+    }
+    _updateThemColor(){
+        let state = this.context.store;
+        this.setState({
+            themColor:state.getState().themColor,
+        })
+    }
+    componentDidMount(){
+        const {store } = this.context;
+        this._updateThemColor();
+        store.sbuscribe(()=>this._updateThemColor());
+    }
+
+    render(){
+        return (
+            <div>
+                <h2 style = {{color:this.state.themColor}}>this is  header</h2>
+                <Title/>
+            </div>
+        )
+    }
+}
+
+```
+
+### 抽离子组件中耦合代码段，封装 connect 函数
+
+上面代码存在的性能问题，1. 子组件代码冗余，都是获取context 然后再获取store，最后从store中获取状态修改自身状态。2.每个组件对context依赖太强。
+
+抽离从context=》store=》state 过程，作为一个connect函数。需要解决的问题，1.每个组件需要的数据结构存在差异，2.封装的connect函数应该是一个pure component，只能根据参数返回对应的组件。（相当于对组件进行优化，化妆）。dumb component （呆瓜组件，只干本质工作，其他的事情一律不管）。
+
+封装的connect函数：
+
+ 
+
+```javascript
+const connect = (mapStateToProps)=>{
+    return (WrappedComponent)=>{
+            class Connect extends Component{
+                static contextTypes = {
+                    store:PropTypes.object,
+                }
+                render(){
+                    const {store} = this.context;
+                    let propState = mapStateToProps(store.getState());
+                    <WrappedComponent {...propState}/>
+                }
+            }
+            return Connect;
+    }
+}
+
+
+class Header extends Component{
+    render(){
+        <div>...根据 props 获取数据</div>
+    }
+}
+//Header 组件需要的数据结构
+const mapStateToProps = (state)=>{
+    return {
+        themColor:state.themColor,
+    }
+}
+
+//调用
+Header = connect(mapStateToProps)(Header);
+```
+
+此时的子组件需要使用props获取数据来进行渲染。
+
+
+
+接着完善，将数据改变动态渲染的监听函数绑定到connect上实现。在componentWillMount 中绑定更新函数，然后将数据动态传给子组件更新。
+
+ 
+
+```javascript
+//完善后的connect函数
+const connect = (mapStateToProps)=>{
+    return (WrappedComponent)=>{
+            class Connect extends Component{
+                static contextTypes = {
+                    store:PropTypes.object,
+                }
+                constructor(){
+                    super();
+                    this.state = {
+                        allProps = {},
+                    }
+                }
+                componentWillMount(){
+                    let {store} = this.context;
+                   this._updateProps();
+                   store.sbuscribe(()=>{this._updateProps()});
+                }
+                _updateProps(){
+                    const {store} = this.context;
+                    let stateProps = mapStateToProps(store.getState(),this.props);
+                    this.setState({
+                        allProps:{
+                            ...stateProps,
+                            ...this.props,
+                        }
+                    })
+                }
+                render(){
+                    const {store} = this.context;
+                    let propState = mapStateToProps(store.getState());
+                    <WrappedComponent {...this.state.allProps}/>
+                }
+            }
+            return Connect;
+    }
+}
+```
+
+
+
+### 优化dispatch 解构，从此子组件优化完成
+
+ 此时仍然存在问题，不能使用dispatch更改store中的数据（其实搞这么就就是为了把store中数据和函数解放出来，因为子组件（dumb component）只是用到数据和修改数据的函数，注意createStore中的三大将军 getSate,dispatch,subscribe；数据被解构在connect组件中通过props传递到对应的dumb 组件中，而subscribe 是监听数据变化后进行的操作就是更新 connect 的 `this.state` 从而更新对应dumb组件的props。剩下的就需要完成dispatch的解构，思路和state结构是一样的。
+
+  
+
+```javascript
+
+// 存在问题，dispatch 在子组件中不能正常修改store数据状态
+//继续优化
+
+const connect = (mapStateToProps,mapDispatchToProps)=>{
+    return (WrappedComponent)=>{
+        class Connect extends Component{
+            static contextType ={
+                store:PropTypes.object,
+            }
+
+            constructor(){
+                super();
+                this.state = {
+                    allProps:{},
+                }
+            }
+
+            componentWillMount(){
+                const {store} = this.context;
+                this._updateProps();
+                store.subscribe(()=>{this._updateProps()});
+            }
+
+            _updateProps(){
+                const {store} = this.context;
+                let stateProps = mapStateToProps? mapStateToProps(store.getState()) : {};
+                let dispatchProps = mapDispatchToProps ? mapDispatchToProps(store.dispatch) : {};
+                this.setState({
+                    ...stateProps,
+                    ...dispatchProps,
+                    ...this.props
+                })
+            }
+
+            render(){
+                <WrappedComponent {...this.state.allProps}/>
+            }
+        }
+        return Connect;
+    }
+}
+
+// dispatch 使用案例
+const mapDispatchToProps = (dispatch) => {
+    return {
+      onSwitchColor: (color) => {
+        dispatch({ type: 'CHANGE_COLOR', themeColor: color })
+      }
+    }
+}
+
+const Header = connect(mapDispatchToProps,mapStateToProps);
+
+//在Header dumb component 组件中使用 dispatch
+handleChangeThemColor(color){
+    if(this.props.onSwitchColor){
+        this.props.onSwitchColor(color);
+    }
+}
+
+```
+
+### 优化跟组件index中对context的依赖，提取Provider 容器组件
+
+哈哈！到这儿我很开心了，将index中store放入context部分移植到一个新的容器组件（Provider）中。index成为它的子组件。
+
+ 
+
+```javascript
+
+class Provider extends Component{
+    //限定子组件传值类型，store为对象类型，children为任意类型
+    static PropTypes = {
+        store:PropTypes.object,
+        children:PropTypes.any,
+    }
+    //
+    static childContextTypes = {
+        store:PropTypes.object,
+    }
+    //获取context时执行函数
+    getChildContext(){
+        return {store:this.props.store}
+    }
+
+    render(){
+        <div>{this.props.children}</div>
+    }
+}
+
+//此时index 中引入 Provider 将store作为参数传递给 Provider ,把index 作为Provider的子组件
+
+```
+
+实现 redux 主要实现两个部分，Provider 容器和connect 函数。
