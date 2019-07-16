@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #box{
+            height: 90px;
+            width: 100%;
+            background-color:#abcdef; 
+        }
+    </style>
+</head>
+<body>
+    <div id="box"></div>
+</body>
+<script>
+function debounce(func,defer,immediate){
+    let timeout,result;
+    return function (){
+        let context =this;
+        let arg =arguments;
+        let callNow;
+        if(timeout){
+            clearTimeout(timeout);
+        }
+        if(immediate){
+            callNow = !timeout;
+            if(callNow){
+                result = func.apply(context,arg);
+            }
+            timeout = setTimeout(function (){
+                result = func.apply(context,arg);
+            },defer)
+        }else{
+            timeout = setTimeout(function(){
+                result = func.apply(context,arg);
+            },defer)
+        }
+        return result;
+    }
+}
+
+let count =0;
+function click (){
+    console.log(count++);
+}
+const box = document.getElementById('box');
+box.addEventListener('click',debounce(click,300));
+    
+
+</script>
+</html>
