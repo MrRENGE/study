@@ -43,13 +43,43 @@ function debounce(func,defer,immediate){
     }
 }
 
+
+
+function throttle(func,defer){
+    let now,prev=0;
+      return function (){
+          now = +new Date();
+          if(now-prev>defer){
+              func.apply(this,arguments);
+              prev = now;
+          }
+      }
+}
+
+function throttle1(func,defer){
+    let timeout =null,context,result;
+    return function (){
+        context = this;
+        let arg = arguments;
+        if(!timeout){
+            timeout = setTimeout(function(){
+                timeout = null;
+                result = func.apply(context,arg);
+        
+            },defer)
+        }
+        return result;
+    }
+}
+
+
 let count =0;
 function click (){
     console.log(count++);
 }
 const box = document.getElementById('box');
-box.addEventListener('click',debounce(click,300));
-    
+box.addEventListener('click',throttle1(click,1100));
+//box.addEventListener('mousehove',throttle(click,500));
 
 </script>
 </html>
