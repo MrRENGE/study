@@ -50,3 +50,31 @@ let fun1 = ren._bind2(person,'lazy');
 fun1();
 console.log('new 调用');
 new fun1();
+
+
+// 注意非函数不能使用bind
+// 注意使用中间函数来中转原型，解决new调用时this的指向问题
+// 
+
+Function.prototype._bind3 =function (context){
+    // 只有函数才能绑定
+    if(typeof this !=='function'){
+        throw new Error('this is not function');
+    }
+    let self = this;
+    let arg = Array.prototype.slice.call(arguments,1);
+    function FTemp (){}
+    FTemp.prototype = this.prototype;
+    function bindFun(){
+        let argu = Array.prototype.slice.call(arguments);
+        // 判断 new 调用时候是使用this ，正常调用使用 context 对象作为this指向
+        self.apply(this instanceof FTemp?this:context,arg.concat(argu))
+    }
+    bindFun.prototype = new FTemp();
+    return bindFun;
+}
+console.log('-------------高仿------------');
+let f = ren._bind3(person,'code');
+f();
+console.log('new -');
+new f();
