@@ -3,8 +3,6 @@ function deepCopy(target){
     return JSON.parse(JSON.stringify(target));
 }
 
-
-
 // 递归实现
 function deepCopy (target){
     // 根据目标数据的类型来定义新对象
