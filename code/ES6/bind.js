@@ -73,8 +73,11 @@ Function.prototype._bind3 =function (context){
     bindFun.prototype = new FTemp();
     return bindFun;
 }
+
+
 console.log('-------------高仿------------');
 let f = ren._bind3(person,'code');
 f();
 console.log('new -');
 new f();
+
