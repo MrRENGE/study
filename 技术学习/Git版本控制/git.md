@@ -44,11 +44,16 @@
 
 这是git的精华，也是常用的部分。git分支本质上是一个指向commit对象的指针，每次commit 提交暂存区文件时会生成一个commit对象，该对象会保存前一个commit的引用依次可以形成很多链（因为不同分支上可以提交不同的更新，因此会形成分叉，有分叉就会有合并后面后继续介绍）。而分支则是指向commit对象的一个指针，再做分支切换时，引入HEAD来指向当前分支。
 
-	* 新建分支`git branch name` 
-	* 查看分支列表：`git branch` 
-	* 切换分支：`git checkout name` 
-	* 
-=======
-* testing
->>>>>>> dev
+* 新建分支`git branch name` 
+* 查看分支列表：`git branch` 
+* 切换分支：`git checkout name`
+* 将本地分支关联到远程分支上：
+  * 第一种方式，分别再本地、远程建立分支，然后再本地通过命令进行关联：`git branch --set-upstream-to=远程名/远程分支名 本地分支名`
+  * 第二种方式新建分支直接关联到远程分支： `git checkout -b 分支名 远程名/远程分支名`
+  * 第三种直接使用 `--track`  `git checkout --track 远程名/远程分支名` 创建的分支名同远程分支名。
+  * 第四种，直接将本地分支推送到远程仓库中。`git push 远程名 分支名` 
+
+
+
+### test dev branch 
 
