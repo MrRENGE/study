@@ -28,6 +28,7 @@
 * 提交暂存区使用 `gti commit -m "描述。。。"` ，繁琐的绕过 `git add `  可以使用 `git commit -a -m 'description'`   
 * 使用 `git push ` 将暂存区的代码推到仓库以后，又回到了初始化状态。
 * 注：使用 ` git status ` 查看当前的仓库中的状态。
+<<<<<<< HEAD
 * 使用 ` git log` 可以查看push的日志记录。
 
 ### 远程仓库
@@ -47,4 +48,7 @@
 	* 查看分支列表：`git branch` 
 	* 切换分支：`git checkout name` 
 	* 
+=======
+* testing
+>>>>>>> dev
 
