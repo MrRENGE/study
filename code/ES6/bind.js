@@ -75,9 +75,44 @@ Function.prototype._bind3 =function (context){
 }
 
 
-console.log('-------------高仿------------');
-let f = ren._bind3(person,'code');
-f();
-console.log('new -');
-new f();
+// console.log('-------------高仿------------');
+// let f = ren._bind3(person,'code');
+// f();
+// console.log('new -');
+// new f();
 
+
+
+// 模拟call /apply
+//思路：
+//  1.获取上下文context，call的第一个参数传入是null 的时候默认绑定到window，非引用类型上下文则进行装箱调用
+//  2. 截取参数，
+//  3. 调用函数，并获取返回值
+//  4.删除context上的函数
+
+Function.prototype.call2 = function (context) {
+    var ctx = (context==null ? window : context);
+    ctx.fn = this;
+    var arg = [];
+    for (var i = 1; i < arguments.length; i++){
+        arg.push('arguments['+i+']');
+    }
+    arg = arg.join(',');
+    var result = eval('ctx.fn('+arg+')');
+    delete ctx.fn;
+    return result;
+}
+
+function test(name,age) {
+    console.log(name);
+    console.log(age);
+    console.log(this);
+    return 'handsome boy';
+}
+
+const ctx = { msg: 'call test' };
+const ctx1 = { msg: 'call test' };
+console.log('call runing');
+console.log(test.call('', 'ren', 12));
+console.log('call2 runing');
+console.log(test.call2('', 'wang', 66));
