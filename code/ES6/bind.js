@@ -74,6 +74,22 @@ Function.prototype._bind3 =function (context){
     return bindFun;
 }
 
+if (!Function.prototype.bind) {
+    Function.prototype.bind = function (othis) {
+        if (typeof this !== 'function') {
+            throw new TypeError('this is not function !! ');
+        }
+        var self = this,
+            temp = function () { },
+            args = Array.slice.call(arguments, 1),
+            fn = function () {
+                return self.apply(this instanceof fn ? this : othis, args.concat(Array.slice.call(arguments)));
+            };
+        this.prototype && (temp.prototype = this.prototype);
+        fn.prototype = new temp();
+        return fn;
+    }
+}
 
 // console.log('-------------高仿------------');
 // let f = ren._bind3(person,'code');

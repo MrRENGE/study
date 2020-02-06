@@ -1,6 +1,6 @@
 // 模仿 new 的工作原理
 function newFun(){
-    let obj = Object.create(null),
+    let obj = {},
     // 第一个参数为new 执行的函数名，也是它自身的构造函数
     Constructor = [].shift.call(arguments);
     // new 执行的时候需要拷贝原型，构造函数的原型通过_proto_进行访问
