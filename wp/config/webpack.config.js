@@ -27,5 +27,9 @@ module.exports = {
         new ManifestPlugin(),
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({title:'output manager'})
-    ]
+    ],
+    devtool: 'inline-source-map',
+    devServer: {
+        contentBase: './dist'
+    }
 }
